@@ -1,0 +1,21 @@
+#!/bin/bash
+LONG_FILE=10000
+FILE_TYPES=("sv" "v" "c" "h" "py")
+EXT=${1##*.}
+IS_TYPE=0
+if [[ $1 == "" ]]; then
+    less
+    exit
+fi
+for filetype in ${FILE_TYPES[@]}; do
+    if [[ $filetype == $EXT ]]; then
+        IS_TYPE=1
+        break
+    fi
+done
+if (($IS_TYPE)) && (($(wc -l  < $1) < $LONG_FILE)); then
+    pygmentize -O bg=dark,linenos=True $1 2>/dev/null | less -Ri
+else
+    less -Ri $1
+fi
+
